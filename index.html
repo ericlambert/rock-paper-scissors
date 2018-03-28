@@ -2,12 +2,135 @@
      <html>
          <head>
              <title>
-                 Write a title for your page here..
+                 Rock, Paper Scissors!
              </title>
          </head>
          <body>
+            <h1>Rock, Paper Scissors!</h1>
+            <p>First to win 5 rounds is the champ!</p>
+            <h2>Make your selection:</h2>
+            <button type="button" id="rock">Rock</button>
+            <button type="button" id="paper">Paper</button>
+            <button type="button" id="scissors">Scissors</button>
+
+            <p id="playerChoice"></p>
+
+            <h2>Computer's Selection:</h2>
+            <p id="computerChoice"></p>
+
+            <h2>This round's winner:</h2>
+            <p id="roundWinner"></p>
+
+            <h2>Score</h2>
+            <p>Player:</p><p id="playerScore">0</p>
+            <p>Computer:</p><p id="computerScore">0</p>
+
+            <h1 id="champ"></h1>
+
             <script type="text/javascript">
-                
+                let options = ["rock","paper","scissors"];
+                let playerWins = 0;
+                let computerWins = 0;
+                let ties = 0;
+
+                document.getElementById("rock").onclick = function() {playRound("rock",computerPlay())};
+                document.getElementById("paper").onclick = function() {playRound("paper",computerPlay())};
+                document.getElementById("scissors").onclick = function() {playRound("scissors",computerPlay())};
+
+                function reset(){
+                    playerWins = 0;
+                    computerWins = 0;
+                    document.getElementById("playerScore").innerHTML = playerWins;
+                    document.getElementById("computerScore").innerHTML = computerWins;
+                    document.getElementById("champ").innerHTML = "";
+                }
+
+                function computerPlay(){
+                    const compChoice = options[Math.floor((Math.random() * options.length))];
+                    document.getElementById("computerChoice").innerHTML = compChoice;
+                    return compChoice;
+                }
+
+                function playRound(playerSelection,computerSelection){
+                    if (playerWins >= 5 || computerWins >= 5) {
+                        reset();
+                    }
+
+                    if(contains(playerSelection.toLowerCase(),options)){
+                        document.getElementById("playerChoice").innerHTML = playerSelection;
+                        let strResult = MakeResultText(determineWinner(playerSelection,computerSelection),playerSelection, computerSelection);
+                        document.getElementById("roundWinner").innerHTML = strResult;
+                        document.getElementById("playerScore").innerHTML = playerWins;
+                        document.getElementById("computerScore").innerHTML = computerWins;
+
+                        if (playerWins >= 5) {
+                            document.getElementById("champ").innerHTML = "You are the champion, my friend!";
+                        }
+                        else if (computerWins >= 5) {
+                            document.getElementById("champ").innerHTML = "You are not the champion, my friend!";
+                        }
+
+                        return strResult;
+                    }
+
+
+                }
+
+                function determineWinner(playerSelection, computerSelection){
+                    let playerPlay = playerSelection.toLowerCase();
+                    let strWinner = "player";
+                    playerWins++;
+
+                    if (!(playerSelection == computerSelection)){
+                        if (playerPlay == options[0]){
+                            if (computerSelection == options[1]) { 
+                                strWinner = "computer";
+                                computerWins++;
+                                playerWins--;
+                            }
+                        }else if(playerPlay == options[1]){
+                            if (computerSelection == options[2]) { 
+                                strWinner = "computer"; 
+                                computerWins++;
+                                playerWins--;
+                            }
+                        }else if(playerPlay == options[2]){
+                            if (computerSelection == options[0]) { 
+                                strWinner = "computer";
+                                computerWins++;
+                                playerWins--;
+                            }
+                        }
+                    }else{ 
+                        strWinner = "tie";
+                        ties++;
+                        playerWins--;
+                    }
+
+                    return strWinner;
+                }
+
+                function MakeResultText(winner, playerSelection, computerSelection){
+                    let strResult;
+                    if (winner == "tie") {
+                        strResult = "Tie!" 
+                    }else if (winner == "player") {
+                        strResult = winner + " wins! " + playerSelection + " beats " + computerSelection + ".";
+                    }else{
+                        strResult = winner + " wins! " + computerSelection + " beats " + playerSelection + ".";
+                    }
+
+                    return strResult;
+                }
+
+                function contains(object, array) {
+                    for (var i = array.length - 1; i >= 0; i--) {
+                        if (object == array[i]) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
             </script>
          </body>
      </html>
